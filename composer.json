@@ -1,8 +1,8 @@
 {
-  "name": "bigxoma/tfpdf",
-  "description": "tfpdf",
+  "name": "bigxoma/tfpdf-sector",
+  "description": "tfpdf-sector",
   "keywords": ["pdf"],
-  "homepage": "http://github.com/bigxoma/tfpdf",
+  "homepage": "http://github.com/bigxoma/tfpdf-sector",
   "type": "library",
   "license": "LGPL",
   "authors": [
