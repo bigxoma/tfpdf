@@ -4,7 +4,23 @@ namespace tFPDF;
 
 class PDF_Sector extends PDF
 {
-    function Sector($xc, $yc, $r, $a, $b, $style='FD', $cw=true, $o=90)
+    protected function _out($strData)
+    {
+        // Add a line to the document
+        if ($this->int_state == self::DOCUMENT_STATE_CREATING) {
+            $this->arr_pages[$this->int_page] .= $strData . "\n";
+        } else {
+            $this->str_buffer .= $strData . "\n";
+        }
+    }
+
+    public function writeToFile($destination='', $name='')
+    {
+        $this->SetLink($destination);
+        file_put_contents($name, parent::output()) ;
+    }
+
+    public function Sector($xc, $yc, $r, $a, $b, $style='FD', $cw=true, $o=90)
     {
         $d0 = $a - $b;
         if($cw){
@@ -97,7 +113,7 @@ class PDF_Sector extends PDF
         $this->_out($op);
     }
 
-    function _Arc($x1, $y1, $x2, $y2, $x3, $y3 )
+    public function _Arc($x1, $y1, $x2, $y2, $x3, $y3 )
     {
         $h = $this->h;
         $this->_out(sprintf('%.2F %.2F %.2F %.2F %.2F %.2F c',
