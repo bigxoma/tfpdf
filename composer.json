@@ -1,8 +1,8 @@
 {
-  "name": "docnet/tfpdf",
+  "name": "bigxoma/tfpdf",
   "description": "tfpdf",
   "keywords": ["pdf"],
-  "homepage": "http://github.com/DocnetUK/tfpdf",
+  "homepage": "http://github.com/bigxoma/tfpdf",
   "type": "library",
   "license": "LGPL",
   "authors": [
