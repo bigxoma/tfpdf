@@ -1873,6 +1873,14 @@ class PDF
     }
 
     /**
+     * @param $path
+     */
+    public function setFontPath($path)
+    {
+        $this->str_font_path = $path;
+    }
+
+    /**
      * @return string
      */
     protected function getFontWritePath()
