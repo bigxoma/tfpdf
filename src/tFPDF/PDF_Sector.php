@@ -4,6 +4,16 @@ namespace tFPDF;
 
 class PDF_Sector extends PDF
 {
+    public function __construct($pageOrientation = 'P', $pageUnits = 'mm', $pageSize = 'A4')
+    {
+        parent::__construct($pageOrientation, $pageUnits, $pageSize);
+
+        $this->AddFont('Roboto','','roboto.ttf',true);
+        $this->AddFont('Roboto','B','robotobd.ttf',true);
+        $this->AddFont('Roboto','BI','robotobi.ttf',true);
+        $this->AddFont('Roboto','I','robotoi.ttf',true);
+    }
+
     protected function _out($strData)
     {
         // Add a line to the document
