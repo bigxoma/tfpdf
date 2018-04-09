@@ -4,7 +4,7 @@
   "keywords": ["pdf"],
   "homepage": "http://github.com/bigxoma/tfpdf-sector",
   "type": "library",
-  "license": "LGPL",
+  "license": "LGPL-2.1-or-later",
   "authors": [
     {
       "name": "David Wilcock",
