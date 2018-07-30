@@ -672,14 +672,17 @@ class GraphicReportPDF extends PDF implements GraphicReportPDFInterface
         $angleEnd = 0;
         $i = 0;
         foreach ($data as $val) {
-            $angle = ($val * 360) / doubleval($this->sum);
-            if ($angle != 0) {
-                $angleEnd = $angleStart + $angle;
-                $this->SetFillColor($colors[$i][0], $colors[$i][1], $colors[$i][2]);
-                $this->sector($XDiag, $YDiag, $radius, $angleStart, $angleEnd, $isDoughnut ? 'F' : 'FD');
-                $angleStart += $angle;
+            $sum = doubleval($this->sum);
+            if($sum != 0) {
+                $angle = ($val * 360) / doubleval($this->sum);
+                if ($angle != 0) {
+                    $angleEnd = $angleStart + $angle;
+                    $this->SetFillColor($colors[$i][0], $colors[$i][1], $colors[$i][2]);
+                    $this->sector($XDiag, $YDiag, $radius, $angleStart, $angleEnd, $isDoughnut ? 'F' : 'FD');
+                    $angleStart += $angle;
+                }
+                $i++;
             }
-            $i++;
         }
 
         if ($isDoughnut) {
