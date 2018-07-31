@@ -938,8 +938,8 @@ class GraphicReportPDF extends PDF implements GraphicReportPDFInterface
     private function calculateDataForBarDiagram($h, $barChartData, $maxVal, $nbDiv): array
     {
         $maxGrid = ceil(log10($maxVal));
-        // If max val is 1, then log10 returns 0, but minimum can be 1 decade
-        if ($maxGrid == 0) {
+        // If max val <= 1, then log10 returns <= 0, but minimum can be 1 decade
+        if ($maxGrid <= 0) {
             $maxGrid = 1;
         }
         $this->SetFont(self::DEFAULT_FONT, '', 10);
@@ -958,7 +958,7 @@ class GraphicReportPDF extends PDF implements GraphicReportPDFInterface
         $lRepere = floor($lDiag / $nbDiv);
         $pxDecade = floor($lDiag / $maxGrid);
         $lDiag = $lRepere * $nbDiv;
-        $unit = $lDiag / $maxVal;
+        $unit = $lDiag / max($maxVal, 1);
         $hBar = $hDiag / $this->NbVal;
         $hDiag = $hBar * $this->NbVal;
         return [$maxGrid, $margin, $YDiag, $hDiag, $XDiag, $pxDecade, $unit];
