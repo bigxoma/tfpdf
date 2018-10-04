@@ -106,11 +106,14 @@ class GraphicReportPDF extends PDF implements GraphicReportPDFInterface
      * @param bool $convertBarVals does convert value (duration) to human format time
      * @param string $barName bar name
      */
-    public function drawBarChart(int $w, int $count, array $data, array $colors, int $maxVal, bool $convertBarVals, string $barName) : void {
+    public function drawBarChart(int $w, int $count, array $data, array $colors, int $maxVal, bool $convertBarVals,
+        string $barName,
+        $legendNamesOrdered = []
+    ) : void {
         $h = 297 - $this->GetY();
         if ($h > $count * 12) {
             $this->drawBarName($barName);
-            $this->barDiagram($w, $count * 12 + 2, $data, $colors, $maxVal, $convertBarVals);
+            $this->barDiagram($w, $count * 12 + 2, $data, $colors, $maxVal, $convertBarVals, 4, $legendNamesOrdered);
 
             // blank space after graph
             $this->Ln(20);
@@ -119,9 +122,9 @@ class GraphicReportPDF extends PDF implements GraphicReportPDFInterface
             $this->drawBarName($barName);
             $newH = 297 - $this->GetY();
             if ($newH > $count * 12) {
-                $this->barDiagram($w, $count * 12 + 1, $data, $colors, $maxVal, $convertBarVals);
+                $this->barDiagram($w, $count * 12 + 1, $data, $colors, $maxVal, $convertBarVals, 4, $legendNamesOrdered);
             } else {
-                $this->barDiagram($w, ($newH / $count), $data, $colors, $maxVal, $convertBarVals);
+                $this->barDiagram($w, ($newH / $count), $data, $colors, $maxVal, $convertBarVals, 4, $legendNamesOrdered);
             }
         }
     }
@@ -447,11 +450,14 @@ class GraphicReportPDF extends PDF implements GraphicReportPDFInterface
      * @param bool $toTime
      * @param int $nbDiv
      */
-    public function barDiagram($w, $h, $barChartData, $colors, $maxVal, $toTime = false, $nbDiv = 4) : void {
+    public function barDiagram($w, $h, $barChartData, $colors, $maxVal, $toTime = false, $nbDiv = 4,
+        $legendNamesOrdered = []
+    ) : void {
         // sort bars by location
         ksort($barChartData);
 
-        list($maxGrid, $margin, $YDiag, $hDiag, $XDiag, $pxDecade, $unit) = $this->calculateDataForBarDiagram($h, $barChartData, $maxVal, $nbDiv);
+        list($maxGrid, $margin, $YDiag, $hDiag, $XDiag, $pxDecade, $unit) =
+            $this->calculateDataForBarDiagram($h, $barChartData, $maxVal, $nbDiv);
 
         $this->SetLineWidth(0.2);
 
@@ -486,7 +492,7 @@ class GraphicReportPDF extends PDF implements GraphicReportPDFInterface
         $yLegend = 0;
 
         // Legend
-        $this->drawBarLegend($barLineNames, $colors, $XDiag - 5, $w, $YDiag, $yLegend);
+        $this->drawBarLegend($barLineNames, $colors, $XDiag - 5, $w, $YDiag, $yLegend, $legendNamesOrdered);
 
         // Slide down by legend or graph, what is bigger
         $this->SetXY($x, max($y, $this->GetY()));
@@ -627,15 +633,21 @@ class GraphicReportPDF extends PDF implements GraphicReportPDFInterface
      * @param int $YDiag y position
      * @param int $yLegend
      */
-    private function drawBarLegend($barLineNames, $colors, $XDiag, $w, $YDiag, $yLegend) {
-        foreach ($barLineNames as $name) {
-            list ($red, $green, $blue) = $colors[strtolower($name)] ?? self::COLOR_BLACK;
-            $this->SetFillColor($red, $green, $blue);
-            $this->setDrawColor($red, $green, $blue);
-            $this->SetXY($XDiag + $w - 9, $YDiag - 4 + $yLegend);
-            $this->Rect($XDiag + $w - 13, $YDiag + $yLegend, 3, 3, 'DF');
-            $this->Write(11, $name);
-            $yLegend += 8;
+    private function drawBarLegend($barLineNames, $colors, $XDiag, $w, $YDiag, $yLegend, $legendNamesOrdered) {
+        if (!isset($legendNamesOrdered) || count($legendNamesOrdered) === 0) {
+            $legendNamesOrdered = $barLineNames;
+        }
+
+        foreach ($legendNamesOrdered as $name) {
+            if (in_array($name, $barLineNames)) {
+                list ($red, $green, $blue) = $colors[strtolower($name)] ?? self::COLOR_BLACK;
+                $this->SetFillColor($red, $green, $blue);
+                $this->setDrawColor($red, $green, $blue);
+                $this->SetXY($XDiag + $w - 9, $YDiag - 4 + $yLegend);
+                $this->Rect($XDiag + $w - 13, $YDiag + $yLegend, 3, 3, 'DF');
+                $this->Write(11, $name);
+                $yLegend += 8;
+            }
         }
     }
 
