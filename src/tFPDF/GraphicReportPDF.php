@@ -519,8 +519,8 @@ class GraphicReportPDF extends PDF implements GraphicReportPDFInterface
 
                     $length = 0;
 
-                    for($i = 1;  $i <= $maxGrid; $i++) {
-                        $preTop = ($i === 1) ? 0 : pow(10, $i - 1);
+                    for($i = 0;  $i <= $maxGrid; $i++) {
+                        $preTop = ($i === 0) ? 0 : pow(10, $i - 1);
                         $top = pow(10, $i);
 
                         $valPx = $pxDecade / ($top - $preTop);
@@ -606,7 +606,7 @@ class GraphicReportPDF extends PDF implements GraphicReportPDFInterface
     private function barChartDrawScales($XDiag, $YDiag, $hDiag, $margin, $maxGrid, $stepValue) {
         list($red, $green, $blue) = self::COLOR_BLACK;
         $this->SetLineWidth(0.1);
-        for ($i = 0; $i <= $maxGrid; $i++ ) {
+        for ($i = 0; $i <= $maxGrid+1; $i++ ) {
             if ($i === 0) {
                 $this->setDrawColor($red, $green, $blue);
             } else {
@@ -614,13 +614,13 @@ class GraphicReportPDF extends PDF implements GraphicReportPDFInterface
             }
             $xpos = $XDiag + $stepValue * $i;
             $this->Line($xpos, $YDiag - (($i === 0) ? 5 : 0), $xpos, $YDiag + $hDiag);
-            $val = $i === 0 ? 0 : pow(10, $i);
+            $val = $i === 0 ? 0 : pow(10, $i-1);
             $ypos = $YDiag + $hDiag - $margin + 5;
             $this->Text($xpos, $ypos, $val);
         }
         $this->SetLineWidth(0.2);
         $this->setDrawColor($red, $green, $blue);
-        $this->Line($XDiag, $YDiag + $hDiag - $margin + 2, $XDiag + $stepValue * $maxGrid + 5, $YDiag + $hDiag - $margin + 2);
+        $this->Line($XDiag, $YDiag + $hDiag - $margin + 2, $XDiag + $stepValue * ($maxGrid+1) + 5, $YDiag + $hDiag - $margin + 2);
     }
 
     /**
@@ -926,7 +926,7 @@ class GraphicReportPDF extends PDF implements GraphicReportPDFInterface
             }
 
             $this->setDrawColor(200, 200, 200);
-            $this->Line($XDiag, $formula - 0.5, $XDiag + $pxDecade * $maxGrid, $formula - 0.5);
+            $this->Line($XDiag, $formula - 0.5, $XDiag + $pxDecade * ($maxGrid + 1), $formula - 0.5); // Horizontal grid line
             list($red, $green, $blue) = self::COLOR_BLACK;
             $this->setDrawColor($red, $green, $blue);
 
@@ -949,11 +949,8 @@ class GraphicReportPDF extends PDF implements GraphicReportPDFInterface
      */
     private function calculateDataForBarDiagram($h, $barChartData, $maxVal, $nbDiv): array
     {
-        $maxGrid = ceil(log10($maxVal));
-        // If max val <= 1, then log10 returns <= 0, but minimum can be 1 decade
-        if ($maxGrid <= 0) {
-            $maxGrid = 1;
-        }
+        // Find $maxGrid so that $maxVal <= pow(10, $maxGrid)
+        $maxGrid = ceil(log10(max($maxVal, 1))); // $maxGrid >= 0 (==0 if $maxVal <= 1)
         $this->SetFont(self::DEFAULT_FONT, '', 10);
         list($red, $green, $blue) = self::COLOR_BLACK;
         $this->setDrawColor($red, $green, $blue);
@@ -968,7 +965,7 @@ class GraphicReportPDF extends PDF implements GraphicReportPDFInterface
         $valIndRepere = ceil($maxVal / $nbDiv);
         $maxVal = $valIndRepere * $nbDiv;
         $lRepere = floor($lDiag / $nbDiv);
-        $pxDecade = floor($lDiag / $maxGrid);
+        $pxDecade = floor($lDiag / ($maxGrid+1));
         $lDiag = $lRepere * $nbDiv;
         $unit = $lDiag / max($maxVal, 1);
         $hBar = $hDiag / $this->NbVal;
