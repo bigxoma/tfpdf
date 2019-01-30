@@ -606,7 +606,7 @@ class GraphicReportPDF extends PDF implements GraphicReportPDFInterface
     private function barChartDrawScales($XDiag, $YDiag, $hDiag, $margin, $maxGrid, $stepValue) {
         list($red, $green, $blue) = self::COLOR_BLACK;
         $this->SetLineWidth(0.1);
-        for ($i = 0; $i <= $maxGrid+1; $i++ ) {
+        for ($i = 0; $i <= $maxGrid + 1; $i++ ) {
             if ($i === 0) {
                 $this->setDrawColor($red, $green, $blue);
             } else {
@@ -614,13 +614,13 @@ class GraphicReportPDF extends PDF implements GraphicReportPDFInterface
             }
             $xpos = $XDiag + $stepValue * $i;
             $this->Line($xpos, $YDiag - (($i === 0) ? 5 : 0), $xpos, $YDiag + $hDiag);
-            $val = $i === 0 ? 0 : pow(10, $i-1);
+            $val = $i === 0 ? 0 : pow(10, $i - 1);
             $ypos = $YDiag + $hDiag - $margin + 5;
             $this->Text($xpos, $ypos, $val);
         }
         $this->SetLineWidth(0.2);
         $this->setDrawColor($red, $green, $blue);
-        $this->Line($XDiag, $YDiag + $hDiag - $margin + 2, $XDiag + $stepValue * ($maxGrid+1) + 5, $YDiag + $hDiag - $margin + 2);
+        $this->Line($XDiag, $YDiag + $hDiag - $margin + 2, $XDiag + $stepValue * ($maxGrid + 1) + 5, $YDiag + $hDiag - $margin + 2);
     }
 
     /**
@@ -965,7 +965,7 @@ class GraphicReportPDF extends PDF implements GraphicReportPDFInterface
         $valIndRepere = ceil($maxVal / $nbDiv);
         $maxVal = $valIndRepere * $nbDiv;
         $lRepere = floor($lDiag / $nbDiv);
-        $pxDecade = floor($lDiag / ($maxGrid+1));
+        $pxDecade = floor($lDiag / ($maxGrid + 1));
         $lDiag = $lRepere * $nbDiv;
         $unit = $lDiag / max($maxVal, 1);
         $hBar = $hDiag / $this->NbVal;
