@@ -544,11 +544,13 @@ class GraphicReportPDF extends PDF implements GraphicReportPDFInterface
 
     /**
      * @param int $loc
-     * @return false|string date in mm:ss or hh:mm:ss format
+     * @return string date in mm:ss or hh:mm:ss format
      */
     private function convertToTime($loc) {
         if ($loc < 3600) {
-            return date('i:s', $loc);
+            $i = floor($loc / 60);
+            $s = $loc % 60;
+            return sprintf("%02d:%02d", $i, $s);
         } else {
             $H = floor($loc / 3600);
             $i = ($loc / 60) % 60;
