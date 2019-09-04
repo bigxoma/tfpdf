@@ -1,8 +1,8 @@
 {
-  "name": "bigxoma/tfpdf-sector",
+  "name": "ascom/tfpdf-sector",
   "description": "tfpdf-sector",
   "keywords": ["pdf"],
-  "homepage": "http://github.com/bigxoma/tfpdf-sector",
+  "homepage": "https://github.com/ascomcommon/tfpdf-sector",
   "type": "library",
   "license": "LGPL-2.1-or-later",
   "authors": [
