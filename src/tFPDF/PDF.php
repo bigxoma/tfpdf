@@ -769,14 +769,12 @@ class PDF
         $str_fill_color = $this->str_fill_color;
         $str_text_color = $this->str_text_color;
         $bol_fill_text_differ = $this->bol_fill_text_differ;
-        if ($this->int_page > 0) {
-            // Page footer
-            $this->bol_in_footer = true;
-            $this->Footer();
-            $this->bol_in_footer = false;
-            // Close page
-            $this->EndPage();
-        }
+        // Page footer
+        $this->bol_in_footer = true;
+        $this->Footer();
+        $this->bol_in_footer = false;
+        // Close page
+        $this->EndPage();
         // Start new page
         $this->BeginPage($str_orientation, $str_size);
         // Set line cap style to square
@@ -838,7 +836,13 @@ class PDF
      */
     public function Footer()
     {
-        // To be implemented in your own inherited class
+        // Font style
+        $this->SetFont(graphicReportPDF::DEFAULT_FONT, '', 10);
+        $this->SetTextColor(0, 0, 0);
+        // Position at 15 mm from bottom
+        $this->SetY(-15);
+        // Page number
+        $this->Cell(0, 10, 'Page '. $this->PageNo() . ' of ' . $this->str_alias_number_pages . $this->AliasNbPages());
     }
 
     /**
